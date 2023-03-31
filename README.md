@@ -12,4 +12,8 @@ To activate the virtual environment:
 
 Finally you can run the app using:
 
-`uvicorn main:app`
+`uvicorn src.main:app`
+
+To run the tests:
+
+`pytest`
