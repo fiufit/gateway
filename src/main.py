@@ -4,13 +4,13 @@ from fastapi.security import HTTPBearer
 from fastapi.responses import JSONResponse
 import uvicorn
 
-from .config import APP_HOST, APP_PORT, REGISTER_PATH, FINISH_REGISTER_PATH
+from config import APP_HOST, APP_PORT, REGISTER_PATH, FINISH_REGISTER_PATH
 
-from .request import make_request
+from request import make_request
 
-from .register_request import RegisterRequest, FinishRegisterRequest
+from register_request import RegisterRequest, FinishRegisterRequest
 
-from .validation import get_validated_user
+from validation import get_validated_user, initialize_firebase_app
 
 
 app = FastAPI() 
@@ -29,7 +29,6 @@ def handle_validation_error(request, exc) -> JSONResponse:
         
 @app.middleware("http")
 async def api_gateway(request: Request, call_next):
-    print("Esta pasando por el middleware")
     authorization: str = request.headers.get("Authorization")
     try:
         user = await get_validated_user(authorization, request.url.path)
@@ -51,10 +50,12 @@ async def register(request: Request,
 async def finish_register(request: Request, 
                           request_model: FinishRegisterRequest):
     url = FINISH_REGISTER_PATH
-    print(request.state.verified_user)
-    print(await request.json())
     return await make_request(url, dict(request.headers), request.method, {"uid":request.state.verified_user['uid'], **request_model.dict()})
 
 
 if __name__ == '__main__':
+    try:
+        initialize_firebase_app()
+    except:
+        raise Exception("Could not initialize firebase")
     uvicorn.run(app, host=APP_HOST, port=APP_PORT)

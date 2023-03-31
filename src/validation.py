@@ -2,11 +2,12 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
 from fastapi import HTTPException
-from .config import NEEDS_AUTH, FIREBASE_ADMIN
+from config import NEEDS_AUTH, FIREBASE_ADMIN
 
 
-cred = credentials.Certificate(FIREBASE_ADMIN)
-firebase_admin.initialize_app(cred)
+def initialize_firebase_app():
+    cred = credentials.Certificate(FIREBASE_ADMIN)
+    firebase_admin.initialize_app(cred)
 
 
 async def validate_token(token: str):
