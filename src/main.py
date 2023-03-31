@@ -1,0 +1,60 @@
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.security import HTTPBearer
+from fastapi.responses import JSONResponse
+import uvicorn
+
+from .config import APP_HOST, APP_PORT, REGISTER_PATH, FINISH_REGISTER_PATH
+
+from .request import make_request
+
+from .register_request import RegisterRequest, FinishRegisterRequest
+
+from .validation import get_validated_user
+
+
+app = FastAPI() 
+auth_scheme = HTTPBearer()
+
+@app.exception_handler(RequestValidationError)
+def handle_validation_error(request, exc) -> JSONResponse:
+    error_messages = []
+    for error in exc.errors():
+        field_name = error['loc']
+        error_messages.append(f"{field_name}: {error['msg']}")
+    message = ", ".join(error_messages)
+    return JSONResponse(status_code=400,content={"error":{"code":"CODIGO_LOCO","description":f"Request validation error - {message}"}})
+    
+
+        
+@app.middleware("http")
+async def api_gateway(request: Request, call_next):
+    print("Esta pasando por el middleware")
+    authorization: str = request.headers.get("Authorization")
+    try:
+        user = await get_validated_user(authorization, request.url.path)
+    except HTTPException as er:
+        return JSONResponse(status_code=401, content={"error":{"code":"CODIGO_LOCO","description":er.detail}})
+    if user: request.state.verified_user = user
+    return await call_next(request)
+    # si es necesario agregar algo ademas de lo que responde el back puedo aca
+
+
+@app.post("/users/register")
+async def register(request: Request,
+                   request_model: RegisterRequest):
+    url = REGISTER_PATH
+    return await make_request(url, dict(request.headers), request.method, {**request_model.dict()})
+
+
+@app.post("/users/finish_register")
+async def finish_register(request: Request, 
+                          request_model: FinishRegisterRequest):
+    url = FINISH_REGISTER_PATH
+    print(request.state.verified_user)
+    print(await request.json())
+    return await make_request(url, dict(request.headers), request.method, {"uid":request.state.verified_user['uid'], **request_model.dict()})
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, host=APP_HOST, port=APP_PORT)
