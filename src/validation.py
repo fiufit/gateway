@@ -3,10 +3,20 @@ from firebase_admin import credentials
 from firebase_admin import auth
 from fastapi import HTTPException
 from config import NEEDS_AUTH, FIREBASE_ADMIN
+import base64
+import json
+
+def decode_base64_to_dict(base64_string):
+    decoded_bytes = base64.b64decode(base64_string)
+    decoded_str = decoded_bytes.decode("utf-8")
+    decoded_json = json.loads(decoded_str)
+
+    return decoded_json
 
 
 def initialize_firebase_app():
-    cred = credentials.Certificate(FIREBASE_ADMIN)
+    certificate = decode_base64_to_dict(FIREBASE_ADMIN)
+    cred = credentials.Certificate(certificate)
     firebase_admin.initialize_app(cred)
 
 

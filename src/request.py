@@ -12,5 +12,4 @@ async def make_request(url, headers, method, body):
             res = Response(content=await response.read())
             res.status_code = response.status
             res.headers.update(response.headers)
-            print(f"content:{res.body.decode()}\nstatus_code:{res.status_code}\n")
             return res

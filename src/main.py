@@ -14,7 +14,6 @@ from validation import get_validated_user, initialize_firebase_app
 
 
 app = FastAPI() 
-auth_scheme = HTTPBearer()
 
 @app.exception_handler(RequestValidationError)
 def handle_validation_error(request, exc) -> JSONResponse:
@@ -31,7 +30,11 @@ def handle_validation_error(request, exc) -> JSONResponse:
 async def api_gateway(request: Request, call_next):
     authorization: str = request.headers.get("Authorization")
     try:
-        user = await get_validated_user(authorization, request.url.path)
+        path = "/".join(request.url.path.split("/")[2::])
+    except:
+        return JSONResponse(status_code=400, content={"error":{"code:":"CODIGO_LOCO", "description":"Could not parse path"}})
+    try:
+        user = await get_validated_user(authorization, path)
     except HTTPException as er:
         return JSONResponse(status_code=401, content={"error":{"code":"CODIGO_LOCO","description":er.detail}})
     if user: request.state.verified_user = user
@@ -39,18 +42,21 @@ async def api_gateway(request: Request, call_next):
     # si es necesario agregar algo ademas de lo que responde el back puedo aca
 
 
-@app.post("/users/register")
+@app.post("/{version}/users/register")
 async def register(request: Request,
-                   request_model: RegisterRequest):
-    url = REGISTER_PATH
+                   request_model: RegisterRequest,
+                   version):
+    url = REGISTER_PATH+"/"+version+"/users/register"
     return await make_request(url, dict(request.headers), request.method, {**request_model.dict()})
 
 
-@app.post("/users/finish_register")
+@app.post("/{version}/users/finish-register")
 async def finish_register(request: Request, 
-                          request_model: FinishRegisterRequest):
-    url = FINISH_REGISTER_PATH
-    return await make_request(url, dict(request.headers), request.method, {"uid":request.state.verified_user['uid'], **request_model.dict()})
+                          request_model: FinishRegisterRequest,
+                          version):
+    uid = request.state.verified_user["uid"]
+    url = FINISH_REGISTER_PATH+"/"+version+"/users/"+uid+"/finish-register"
+    return await make_request(url, dict(request.headers), request.method, {**request_model.dict()})
 
 
 if __name__ == '__main__':
