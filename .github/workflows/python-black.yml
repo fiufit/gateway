@@ -1,4 +1,4 @@
-name: Black linter
+name: Black format
 
 on: [push, pull_request]
 
