@@ -26,3 +26,4 @@ jobs:
 
       - name: Lint code
         run: poetry run flakeheaven lint src/ tests/
+        
