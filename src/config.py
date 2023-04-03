@@ -1,11 +1,7 @@
 import os
 
-REGISTER_PATH = os.getenv(
-    "REGISTER_PATH",
-    "localhost",
-)
-FINISH_REGISTER_PATH = os.getenv(
-    "FINISH_REGISTER_PATH",
+USERS_SERVICE_URL = os.getenv(
+    "USERS_SERVICE_URL",
     "localhost",
 )
 APP_HOST = os.getenv("HOST", "localhost")

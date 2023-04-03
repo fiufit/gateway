@@ -8,8 +8,7 @@ from errors import (
     ERR_AUTHORIZATION,
 )
 from config import (
-    REGISTER_PATH,
-    FINISH_REGISTER_PATH,
+    USERS_SERVICE_URL,
 )
 from auth.jwt_bearer import (
     JWTBearer,
@@ -33,7 +32,7 @@ async def register(
     request_model: RegisterRequest,
     version,
 ):
-    url = REGISTER_PATH + "/" + version + "/users/register"
+    url = USERS_SERVICE_URL + "/" + version + "/users/register"
     return await make_request(
         url,
         dict(request.headers),
@@ -56,7 +55,7 @@ async def finish_register(
             description="User does not have a verified email",
         )
     uid = user["uid"]
-    url = f"{FINISH_REGISTER_PATH}/{version}/users/{uid}/finish-register"
+    url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/finish-register"
     return await make_request(
         url,
         dict(request.headers),
