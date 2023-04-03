@@ -1,10 +1,12 @@
-from pydantic import BaseModel
-from datetime import date
+from pydantic import (
+    BaseModel,
+)
 
 
 class RegisterRequest(BaseModel):
     email: str
     password: str
+
 
 class FinishRegisterRequest(BaseModel):
     nick_name: str
