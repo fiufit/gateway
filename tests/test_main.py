@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 
 import src.main
-import src.validation
+import src.auth.jwt_bearer
 
 client = TestClient(src.main.app)
 

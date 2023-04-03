@@ -11,7 +11,7 @@ from config import (
     REGISTER_PATH,
     FINISH_REGISTER_PATH,
 )
-from validation import (
+from auth.jwt_bearer import (
     JWTBearer,
 )
 from register_request import (
