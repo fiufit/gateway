@@ -7,8 +7,8 @@ class RegisterRequest(BaseModel):
     password: str
 
 class FinishRegisterRequest(BaseModel):
-    nickname: str
-    displayname: str
+    nick_name: str
+    display_name: str
     is_male: bool
     birth_date: str
     height: int
