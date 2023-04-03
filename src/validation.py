@@ -1,10 +1,16 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
-from fastapi import HTTPException
-from config import NEEDS_AUTH, FIREBASE_ADMIN
+from fastapi.security import HTTPBearer
+from config import FIREBASE_ADMIN
 import base64
 import json
+
+from fastapi import Request
+from errors import CustomException, ERR_BAD_REQUEST, ERR_AUTHORIZATION
+from fastapi.security import HTTPBearer
+
+
 
 def decode_base64_to_dict(base64_string):
     decoded_bytes = base64.b64decode(base64_string)
@@ -20,21 +26,29 @@ def initialize_firebase_app():
     firebase_admin.initialize_app(cred)
 
 
-async def validate_token(token: str):
+def validate_token(token: str):
     try:
         decoded_token = auth.verify_id_token(token, check_revoked=True)
         return decoded_token
     except:
-        raise HTTPException(status_code=401, detail="Invalid authorization token")
+        return None
 
 
-async def get_validated_user(auth, path):
-    if path not in NEEDS_AUTH: return None
-    if not auth: raise HTTPException(status_code=401, detail="Authorization header is missing")
-    try:
-        scheme, token = auth.split()
-    except: raise HTTPException(status_code=401, detail="Invalid authentication scheme")
-    if scheme.lower() != "bearer": raise HTTPException(status_code=401, detail="Invalid authentication scheme")
-    user = await validate_token(token)
-    if not user['email_verified']: raise HTTPException(status_code=401, detail="User does not have a verified email")
-    return user
+class JWTBearer(HTTPBearer):
+    def __init__(self):
+        super(JWTBearer, self).__init__()
+
+    async def __call__(self, request: Request):
+        authorization: str = request.headers.get("Authorization")
+        if not authorization: raise CustomException(status_code=401, error_code=ERR_BAD_REQUEST, description="Authorization header is missing")
+        try:
+            scheme, token = authorization.split()
+        except: raise CustomException(status_code=401, error_code=ERR_BAD_REQUEST, description="Invalid authentication scheme")
+        if not scheme.lower() == "bearer":
+            raise CustomException(status_code=401, error_code=ERR_BAD_REQUEST, description="Invalid authentication scheme")
+        user = self.verify_jwt(token)
+        if not user:raise CustomException(status_code=401, error_code=ERR_AUTHORIZATION, description="Invalid authorization token")
+        return user
+       
+    def verify_jwt(self, jwtoken: str) -> bool:
+        return validate_token(jwtoken)
