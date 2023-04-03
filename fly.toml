@@ -24,3 +24,7 @@ processes = []
   [[services.ports]]
     handlers = ["tls", "http"]
     port = 443
+
+[env]
+HOST = "0.0.0.0"
+PORT = "8000"
