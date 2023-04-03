@@ -10,6 +10,3 @@ FIREBASE_ADMIN = os.getenv(
     "FIREBASE_ADMIN",
     "firebase.json",
 )
-
-# Endpoints que necesitan validar jwt y mail verificado
-NEEDS_AUTH = ["users/finish-register"]
