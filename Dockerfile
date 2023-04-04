@@ -4,8 +4,6 @@ WORKDIR /code
 
 COPY ./poetry.lock /code/poetry.lock
 COPY ./pyproject.toml /code/pyproject.toml
-COPY fiufit-firebase-adminsdk-mk31v-579b142cd4.json /code
-COPY .env /code
 
 RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
