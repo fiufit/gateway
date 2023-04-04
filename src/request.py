@@ -1,7 +1,5 @@
 import aiohttp
-from fastapi import (
-    Response,
-)
+
 from fastapi.encoders import (
     jsonable_encoder,
 )
@@ -27,10 +25,8 @@ async def make_request(
                 url,
                 json=json_compatible_body,
             ) as response:
-                res = Response(content=await response.read())
-                res.status_code = response.status
-                res.headers.update(response.headers)
-                return res
+                response_json = await response.json()
+                return response_json
         except Exception:
             raise CustomException(
                 status_code=502,
