@@ -2,14 +2,29 @@
 name = "gateway"
 version = "0.1.0"
 description = "API gateway or BFF for FiuFit's microservice structure"
-authors = ["Your Name <you@example.com>"]
+authors = ["Tomás Rodríguez <tgrodriguez@fi.uba.ar>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.95.0"
 uvicorn = {extras = ["standard"], version = "^0.21.1"}
+firebase-admin = "^6.1.0"
+aiohttp = "^3.8.4"
+httpx = "^0.23.3"
+pytest = "^7.2.2"
+pytest-cov = "^4.0.0"
+black = "^23.3.0"
+flakeheaven = "^3.2.1"
 
+[tool.black]
+line-length = 90
+
+[tool.flakeheaven.plugins]
+# include everything W503: line break before binary operator
+# because black does that :P
+pyflakes = ["+*"]
+pycodestyle = ["+*", "-W503"]
 
 [build-system]
 requires = ["poetry-core"]

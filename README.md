@@ -1,4 +1,11 @@
 # gateway
+
+[![Tests](https://github.com/fiufit/gateway/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-app.yml)
+
+[![Black format](https://github.com/fiufit/gateway/actions/workflows/python-black.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-black.yml)
+
+[![Flakeheaven Linter](https://github.com/fiufit/gateway/actions/workflows/python-flake.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-flake.yml)
+
 API gateway or BFF for FiuFit's microservice structure
 
 ## Usage
@@ -12,4 +19,8 @@ To activate the virtual environment:
 
 Finally you can run the app using:
 
-`uvicorn main:app`
+`python src/main.py`
+
+To run the tests:
+
+`pytest`

@@ -1,0 +1,8 @@
+*adminsdk*.json
+
+.env
+
+.coverage
+
+.pytest_cache/
+__pycache__/
