@@ -10,3 +10,7 @@ FIREBASE_ADMIN = os.getenv(
     "FIREBASE_ADMIN",
     "firebase.json",
 )
+ALLOWED_ORIGINS = [
+    os.getenv("BACKOFFICE_DOMAIN"),
+    os.getenv("ANDROID_APP_DOMAIN"),
+]
