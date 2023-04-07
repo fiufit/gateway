@@ -10,6 +10,7 @@ import uvicorn
 from config import (
     APP_HOST,
     APP_PORT,
+    ALLOWED_ORIGINS,
 )
 from auth.validation import (
     initialize_firebase_app,
@@ -23,6 +24,10 @@ from errors import (
     handle_custom_exception,
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
+from middlewares.cors import get_origin_list
+
 app = FastAPI()
 
 app.include_router(users.router)
@@ -30,6 +35,13 @@ app.include_router(users.router)
 app.add_exception_handler(RequestValidationError, handle_validation_error)
 app.add_exception_handler(CustomException, handle_custom_exception)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_origin_list(ALLOWED_ORIGINS),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     try:
