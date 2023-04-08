@@ -62,3 +62,33 @@ async def finish_register(
         request.method,
         {**request_model.dict()},
     )
+
+
+@router.get("/{version}/users/{user_id}")
+async def get_user_by_uid(
+    request: Request,
+    version,
+    user_id,
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/users")
+async def get_user_by_nickname(
+    request: Request,
+    version,
+    nickname: str,
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users?nickname={nickname}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
