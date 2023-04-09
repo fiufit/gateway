@@ -26,7 +26,7 @@ src -> main -> users -> make_request
 def test_successful_register(mock_make_request):
     mock_make_request.return_value = {"success": True}
     response = client.post(
-        "/v1/register",
+        "/v1/users/register",
         json={"email": "test@example.com", "password": "testpassword"},
     )
     assert response.status_code == 200
@@ -36,7 +36,7 @@ def test_successful_register(mock_make_request):
 
 def test_incorrect_email_format_in_body_register():
     response = client.post(
-        "/v1/register",
+        "/v1/users/register",
         json={"e-mail": "test@example.com", "password": "testpassword"},
     )
     assert response.status_code == 400
@@ -50,7 +50,7 @@ def test_incorrect_email_format_in_body_register():
 
 def test_incorrect_password_format_in_body_register():
     response = client.post(
-        "/v1/register", json={"email": "test@example.com", "pw": "testpassword"}
+        "/v1/users/register", json={"email": "test@example.com", "pw": "testpassword"}
     )
     assert response.status_code == 400
     response_body = response.json()
@@ -63,7 +63,7 @@ def test_incorrect_password_format_in_body_register():
 
 def test_incorrect_email_and_password_format_in_body_register():
     response = client.post(
-        "/v1/register", json={"e-mail": "test@example.com", "pw": "testpassword"}
+        "/v1/users/register", json={"e-mail": "test@example.com", "pw": "testpassword"}
     )
     assert response.status_code == 400
     response_body = response.json()

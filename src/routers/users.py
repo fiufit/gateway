@@ -26,13 +26,13 @@ router = APIRouter()
 auth_scheme = JWTBearer()
 
 
-@router.post("/{version}/register")
+@router.post("/{version}/users/register")
 async def register(
     request: Request,
     request_model: RegisterRequest,
     version,
 ):
-    url = USERS_SERVICE_URL + "/" + version + "/register"
+    url = USERS_SERVICE_URL + "/" + version + "/users/register"
     return await make_request(
         url,
         dict(request.headers),
