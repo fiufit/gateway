@@ -1,0 +1,7 @@
+status:
+  patch:
+    default:
+      enabled: false
+  project:
+    default:
+      enabled: false
