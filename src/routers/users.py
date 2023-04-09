@@ -69,7 +69,14 @@ async def get_user_by_uid(
     request: Request,
     version,
     user_id,
+    user: dict = Depends(auth_scheme),
 ):
+    if user["email_verified"] is False:
+        raise CustomException(
+            status_code=401,
+            error_code=ERR_AUTHORIZATION,
+            description="User does not have a verified email",
+        )
     url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}"
     return await make_request(
         url,
@@ -84,7 +91,14 @@ async def get_user_by_nickname(
     request: Request,
     version,
     nickname: str,
+    user: dict = Depends(auth_scheme),
 ):
+    if user["email_verified"] is False:
+        raise CustomException(
+            status_code=401,
+            error_code=ERR_AUTHORIZATION,
+            description="User does not have a verified email",
+        )
     url = f"{USERS_SERVICE_URL}/{version}/users?nickname={nickname}"
     return await make_request(
         url,
