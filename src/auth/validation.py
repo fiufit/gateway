@@ -8,9 +8,11 @@ from firebase_admin import (
 
 from config import (
     FIREBASE_ADMIN,
+    USERS_JWT_KEY
 )
 import base64
 import json
+import jwt
 
 
 def decode_base64_to_dict(
@@ -29,7 +31,7 @@ def initialize_firebase_app():
     firebase_admin.initialize_app(cred)
 
 
-def validate_token(
+def validate_firebase_token(
     token: str,
 ):
     try:
@@ -40,3 +42,24 @@ def validate_token(
         return decoded_token
     except Exception:
         return None
+    
+
+def validate_admin_token(
+        token: str,
+):
+    public_key_bytes = base64.b64decode(USERS_JWT_KEY)
+    public_key_str = public_key_bytes.decode("utf-8")
+    try:
+        decoded_token = jwt.decode(token, public_key_str, algorithms=["RS256"], options={"verify_exp": True})
+        return decoded_token
+    except jwt.exceptions.InvalidTokenError:
+        return None
+    
+def validate_token(
+        token: str,
+):
+    admin = validate_admin_token(token)
+    if admin is not None:
+        return admin
+    user = validate_firebase_token(token)
+    return user

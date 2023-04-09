@@ -13,6 +13,9 @@ from config import (
 from auth.jwt_bearer import (
     JWTBearer,
 )
+from auth.user_jwt_bearer import (
+    UserJWTBearer
+)
 from register_request import (
     RegisterRequest,
     FinishRegisterRequest,
@@ -23,16 +26,17 @@ from request import (
 
 
 router = APIRouter()
+user_auth_scheme = UserJWTBearer()
 auth_scheme = JWTBearer()
 
 
-@router.post("/{version}/register")
+@router.post("/{version}/users/register")
 async def register(
     request: Request,
     request_model: RegisterRequest,
     version,
 ):
-    url = USERS_SERVICE_URL + "/" + version + "/register"
+    url = USERS_SERVICE_URL + "/" + version + "/users/register"
     return await make_request(
         url,
         dict(request.headers),
@@ -46,7 +50,7 @@ async def finish_register(
     request: Request,
     request_model: FinishRegisterRequest,
     version,
-    user: dict = Depends(auth_scheme),
+    user: dict = Depends(user_auth_scheme),
 ):
     if user["email_verified"] is False:
         raise CustomException(
