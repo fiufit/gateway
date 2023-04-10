@@ -6,13 +6,11 @@ from firebase_admin import (
     auth,
 )
 
-from config import (
-    FIREBASE_ADMIN,
-    USERS_JWT_KEY
-)
+from config import FIREBASE_ADMIN, USERS_JWT_KEY
 import base64
 import json
 import jwt
+from errors import CustomException, ERR_AUTHORIZATION
 
 
 def decode_base64_to_dict(
@@ -35,28 +33,37 @@ def validate_firebase_token(
     token: str,
 ):
     try:
-        decoded_token = auth.verify_id_token(
+        user = auth.verify_id_token(
             token,
             check_revoked=True,
         )
-        return decoded_token
     except Exception:
         return None
-    
+    if user["email_verified"] is False:
+        raise CustomException(
+            status_code=401,
+            error_code=ERR_AUTHORIZATION,
+            description="User does not have a verified email",
+        )
+    return user
+
 
 def validate_admin_token(
-        token: str,
+    token: str,
 ):
     public_key_bytes = base64.b64decode(USERS_JWT_KEY)
     public_key_str = public_key_bytes.decode("utf-8")
     try:
-        decoded_token = jwt.decode(token, public_key_str, algorithms=["RS256"], options={"verify_exp": True})
+        decoded_token = jwt.decode(
+            token, public_key_str, algorithms=["RS256"], options={"verify_exp": True}
+        )
         return decoded_token
     except jwt.exceptions.InvalidTokenError:
         return None
-    
+
+
 def validate_token(
-        token: str,
+    token: str,
 ):
     admin = validate_admin_token(token)
     if admin is not None:

@@ -1,4 +1,4 @@
-from jwt_bearer import JWTBearer
+from .jwt_bearer import JWTBearer
 from fastapi import Request
 
 
@@ -16,7 +16,7 @@ class AdminJWTBearer(JWTBearer):
         self,
         request: Request,
     ):
-        super(
+        return await super(
             AdminJWTBearer,
             self,
         ).__call__(request=request)
