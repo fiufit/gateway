@@ -17,7 +17,6 @@ from auth.validation import (
 )
 from routers import (
     users,
-    admin,
 )
 from errors import (
     CustomException,
@@ -32,7 +31,6 @@ from middlewares.cors import get_origin_list
 app = FastAPI()
 
 app.include_router(users.router)
-app.include_router(admin.router)
 
 app.add_exception_handler(RequestValidationError, handle_validation_error)
 app.add_exception_handler(CustomException, handle_custom_exception)
