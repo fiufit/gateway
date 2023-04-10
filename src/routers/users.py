@@ -3,16 +3,14 @@ from fastapi import (
     Request,
     Depends,
 )
-from errors import (
-    CustomException,
-    ERR_AUTHORIZATION,
-)
 from config import (
     USERS_SERVICE_URL,
 )
 from auth.jwt_bearer import (
     JWTBearer,
 )
+from auth.user_jwt_bearer import UserJWTBearer
+from auth.admin_jwt_bearer import AdminJWTBearer
 from register_request import (
     RegisterRequest,
     FinishRegisterRequest,
@@ -23,11 +21,13 @@ from request import (
 
 
 router = APIRouter()
+user_auth_scheme = UserJWTBearer()
+admin_auth_scheme = AdminJWTBearer()
 auth_scheme = JWTBearer()
 
 
 @router.post("/{version}/users/register")
-async def register(
+async def user_register(
     request: Request,
     request_model: RegisterRequest,
     version,
@@ -42,18 +42,13 @@ async def register(
 
 
 @router.post("/{version}/users/finish-register")
-async def finish_register(
+async def user_finish_register(
     request: Request,
     request_model: FinishRegisterRequest,
     version,
-    user: dict = Depends(auth_scheme),
+    user: dict = Depends(user_auth_scheme),
 ):
-    if user["email_verified"] is False:
-        raise CustomException(
-            status_code=401,
-            error_code=ERR_AUTHORIZATION,
-            description="User does not have a verified email",
-        )
+    print(user)
     uid = user["uid"]
     url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/finish-register"
     return await make_request(
@@ -69,14 +64,8 @@ async def get_user_by_uid(
     request: Request,
     version,
     user_id,
-    user: dict = Depends(auth_scheme),
+    _: dict = Depends(auth_scheme),
 ):
-    if user["email_verified"] is False:
-        raise CustomException(
-            status_code=401,
-            error_code=ERR_AUTHORIZATION,
-            description="User does not have a verified email",
-        )
     url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}"
     return await make_request(
         url,
@@ -91,18 +80,43 @@ async def get_user_by_nickname(
     request: Request,
     version,
     nickname: str,
-    user: dict = Depends(auth_scheme),
+    _: dict = Depends(auth_scheme),
 ):
-    if user["email_verified"] is False:
-        raise CustomException(
-            status_code=401,
-            error_code=ERR_AUTHORIZATION,
-            description="User does not have a verified email",
-        )
     url = f"{USERS_SERVICE_URL}/{version}/users?nickname={nickname}"
     return await make_request(
         url,
         dict(request.headers),
         request.method,
         {},
+    )
+
+
+@router.post("/{version}/admin/register")
+async def admin_register(
+    request: Request,
+    request_model: RegisterRequest,
+    version,
+    _: dict = Depends(admin_auth_scheme),
+):
+    url = USERS_SERVICE_URL + "/" + version + "/admin/register"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {**request_model.dict()},
+    )
+
+
+@router.post("/{version}/admin/login")
+async def admin_login(
+    request: Request,
+    request_model: RegisterRequest,
+    version,
+):
+    url = USERS_SERVICE_URL + "/" + version + "/admin/login"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {**request_model.dict()},
     )
