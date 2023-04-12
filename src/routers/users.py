@@ -9,6 +9,7 @@ from config import (
 from auth.jwt_bearer import (
     JWTBearer,
 )
+from auth.validation import validate_deleter
 from auth.user_jwt_bearer import UserJWTBearer
 from auth.admin_jwt_bearer import AdminJWTBearer
 from models.register_request import (
@@ -49,7 +50,6 @@ async def user_finish_register(
     version,
     user: dict = Depends(user_auth_scheme),
 ):
-    print(user)
     uid = user["uid"]
     url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/finish-register"
     return await make_request(
@@ -137,4 +137,21 @@ async def update_user(
         dict(request.headers),
         request.method,
         {**request_model.dict()},
+    )
+
+
+@router.delete("/{version}/users/{user_id}")
+async def delete_user(
+    request: Request,
+    version,
+    user_id,
+    user: dict = Depends(auth_scheme),
+):
+    validate_deleter(user, user_id)
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
     )
