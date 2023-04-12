@@ -9,6 +9,9 @@ from errors import (
 )
 
 
+from fastapi.responses import JSONResponse
+
+
 # a priori podemos dejar los headers que use por default aiohttp
 # despues podemos ver si hace falta que reciba headers extras
 async def make_request(
@@ -25,8 +28,11 @@ async def make_request(
                 url,
                 json=json_compatible_body,
             ) as response:
-                response_json = await response.json()
-                return response_json
+                json_body = await response.json()
+                json_response = JSONResponse(
+                    content=json_body, status_code=response.status
+                )
+                return json_response
         except Exception:
             raise CustomException(
                 status_code=502,
