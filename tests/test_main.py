@@ -117,7 +117,7 @@ def test_successful_finish_register(mock_bearer_class, mock_make_request):
     }
     headers = {"Authorization": "Bearer fake_token"}
     body = {
-        "nick_name": "LioMessi",
+        "nickname": "LioMessi",
         "display_name": "Lionel Messi",
         "is_male": True,
         "birth_date": "18/12/2022",

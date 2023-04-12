@@ -9,7 +9,7 @@ class RegisterRequest(BaseModel):
 
 
 class FinishRegisterRequest(BaseModel):
-    nick_name: str
+    nickname: str
     display_name: str
     is_male: bool
     birth_date: str

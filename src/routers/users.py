@@ -11,10 +11,11 @@ from auth.jwt_bearer import (
 )
 from auth.user_jwt_bearer import UserJWTBearer
 from auth.admin_jwt_bearer import AdminJWTBearer
-from register_request import (
+from models.register_request import (
     RegisterRequest,
     FinishRegisterRequest,
 )
+from models.update_request import UpdateUserRequest
 from request import (
     make_request,
 )
@@ -114,6 +115,23 @@ async def admin_login(
     version,
 ):
     url = USERS_SERVICE_URL + "/" + version + "/admin/login"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {**request_model.dict()},
+    )
+
+
+@router.patch("/{version}/users")
+async def update_user(
+    request: Request,
+    request_model: UpdateUserRequest,
+    version,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{USERS_SERVICE_URL}/{version}/users/{uid}"
     return await make_request(
         url,
         dict(request.headers),
