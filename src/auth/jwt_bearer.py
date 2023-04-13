@@ -9,7 +9,7 @@ from fastapi import (
 from errors import (
     CustomException,
     ERR_BAD_REQUEST,
-    ERR_AUTHORIZATION,
+    ERR_BAD_AUTH_TOKEN,
 )
 
 from .validation import validate_token
@@ -54,7 +54,7 @@ class JWTBearer(HTTPBearer):
         if not user:
             raise CustomException(
                 status_code=401,
-                error_code=ERR_AUTHORIZATION,
+                error_code=ERR_BAD_AUTH_TOKEN,
                 description="Invalid authorization token",
             )
         return user

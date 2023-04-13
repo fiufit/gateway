@@ -10,7 +10,7 @@ from config import FIREBASE_ADMIN, USERS_JWT_KEY
 import base64
 import json
 import jwt
-from errors import CustomException, ERR_AUTHORIZATION
+from errors import CustomException, ERR_NOT_AUTHORIZED, ERR_EMAIL_NOT_VERIFIED
 
 
 def decode_base64_to_dict(
@@ -42,7 +42,7 @@ def validate_firebase_token(
     if user["email_verified"] is False:
         raise CustomException(
             status_code=401,
-            error_code=ERR_AUTHORIZATION,
+            error_code=ERR_EMAIL_NOT_VERIFIED,
             description="User does not have a verified email",
         )
     return user
@@ -70,3 +70,30 @@ def validate_token(
         return admin
     user = validate_firebase_token(token)
     return user
+
+
+def validate_deleter(
+    usr_to_validate: dict,
+    usr_to_delete: str,
+):
+    if "is_admin" in usr_to_validate.keys():
+        if usr_to_validate["is_admin"]:
+            return
+        raise CustomException(
+            status_code=401,
+            error_code=ERR_NOT_AUTHORIZED,
+            description="User is not an admin",
+        )
+    if "uid" in usr_to_validate.keys():
+        if usr_to_validate["uid"] == usr_to_delete:
+            return
+        raise CustomException(
+            status_code=401,
+            error_code=ERR_NOT_AUTHORIZED,
+            description="User cannot delete another user",
+        )
+    raise CustomException(
+        status_code=401,
+        error_code=ERR_NOT_AUTHORIZED,
+        description="Could not validate the deleter",
+    )
