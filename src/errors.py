@@ -7,7 +7,9 @@ from fastapi.responses import (
 
 ERR_INTERNAL = "G0"
 ERR_BAD_REQUEST = "G1"
-ERR_AUTHORIZATION = "G2"
+ERR_BAD_AUTH_TOKEN = "G2"
+ERR_NOT_AUTHORIZED = "G3"
+ERR_EMAIL_NOT_VERIFIED = "G4"
 
 
 class CustomException(HTTPException):
