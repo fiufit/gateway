@@ -86,7 +86,6 @@ async def get_user_by_nickname(
 ):
     params = model.to_query_string()
     url = f"{USERS_SERVICE_URL}/{version}/users?{params}"
-    print(url)
     return await make_request(
         url,
         dict(request.headers),
