@@ -17,6 +17,7 @@ from models.register_request import (
     FinishRegisterRequest,
 )
 from models.update_request import UpdateUserRequest
+from models.get_users_request import GetUsersRequest
 from request import (
     make_request,
 )
@@ -80,10 +81,11 @@ async def get_user_by_uid(
 async def get_user_by_nickname(
     request: Request,
     version,
-    nickname: str,
+    model: GetUsersRequest = Depends(),
     _: dict = Depends(auth_scheme),
 ):
-    url = f"{USERS_SERVICE_URL}/{version}/users?nickname={nickname}"
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users?{params}"
     return await make_request(
         url,
         dict(request.headers),
