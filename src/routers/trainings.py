@@ -35,7 +35,6 @@ async def create_training_plan(
 ):
     uid = user["uid"]
     url = TRAININGS_SERVICE_URL + "/" + version + "/trainings"
-    print({"trainer_id": uid, **request_model.dict()})
     return await make_request(
         url,
         dict(request.headers),
