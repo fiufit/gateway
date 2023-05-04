@@ -12,12 +12,12 @@ from auth.jwt_bearer import (
 from auth.validation import validate_deleter
 from auth.user_jwt_bearer import UserJWTBearer
 from auth.admin_jwt_bearer import AdminJWTBearer
-from models.register_request import (
+from models.users.register_request import (
     RegisterRequest,
     FinishRegisterRequest,
 )
-from models.update_request import UpdateUserRequest
-from models.get_users_request import GetUsersRequest
+from models.users.update_request import UpdateUserRequest
+from models.users.get_users_request import GetUsersRequest
 from request import (
     make_request,
 )
@@ -78,7 +78,7 @@ async def get_user_by_uid(
 
 
 @router.get("/{version}/users")
-async def get_user_by_nickname(
+async def get_user(
     request: Request,
     version,
     model: GetUsersRequest = Depends(),
