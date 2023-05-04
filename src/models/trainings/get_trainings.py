@@ -1,20 +1,14 @@
-from pydantic import (
-    BaseModel,
-)
 from typing import Optional
+from models.pagination import Pagination
 
 
-class Pagination(BaseModel):
-    page: Optional[int]
-    page_size: Optional[int]
-    total_rows: Optional[int]
-
-
-class GetUsersRequest(Pagination):
+class GetTrainingsRequest(Pagination):
     name: Optional[str]
-    nickname: Optional[str]
-    location: Optional[str]
-    is_verified: Optional[bool]
+    description: Optional[str]
+    difficulty: Optional[str]
+    trainer_id: Optional[str]
+    min_duration: Optional[int]
+    max_duration: Optional[int]
 
     def to_query_string(self):
         params = self.dict()
