@@ -82,6 +82,23 @@ async def update_training_plan(
     )
 
 
+@router.delete("/{version}/trainings/{training_id}")
+async def delete_training_plan(
+    request: Request,
+    version,
+    training_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"trainer_id": uid},
+    )
+
+
 @router.get("/{version}/trainings/{training_id}/exercises/{exercise_id}")
 async def get_exercise_by_id(
     request: Request,
