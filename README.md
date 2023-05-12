@@ -24,3 +24,17 @@ Finally you can run the app using:
 To run the tests:
 
 `pytest`
+
+## Links
+
+- Fly.io deploy dashboard:
+
+    - https://fly.io/apps/fiufit-gateway
+
+- Swagger docs:
+
+    - https://fiufit-gateway.fly.dev/docs
+
+- Coverage report:
+
+    - https://app.codecov.io/github/fiufit/gateway
