@@ -161,14 +161,14 @@ async def unfollow_user(
     )
 
 
-@router.get("/{version}/users/followers")
+@router.get("/{version}/users/{user_id}/followers")
 async def get_followers(
     request: Request,
     version,
-    user: dict = Depends(user_auth_scheme),
+    user_id,
+    _: dict = Depends(auth_scheme),
 ):
-    uid = user["uid"]
-    url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/followers"
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/followers"
     return await make_request(
         url,
         dict(request.headers),
@@ -177,14 +177,14 @@ async def get_followers(
     )
 
 
-@router.get("/{version}/users/followed")
+@router.get("/{version}/users/{user_id}/followed")
 async def get_followed(
     request: Request,
     version,
-    user: dict = Depends(user_auth_scheme),
+    user_id,
+    _: dict = Depends(auth_scheme),
 ):
-    uid = user["uid"]
-    url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/followed"
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/followed"
     return await make_request(
         url,
         dict(request.headers),
