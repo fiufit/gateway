@@ -28,8 +28,9 @@ from errors import (
 from fastapi.middleware.cors import CORSMiddleware
 
 from middlewares.cors import get_origin_list
+from docs import tags_metadata
 
-app = FastAPI()
+app = FastAPI(openapi_tags=tags_metadata)
 
 app.include_router(users.router)
 app.include_router(trainings.router)

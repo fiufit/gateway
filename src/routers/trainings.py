@@ -14,6 +14,8 @@ from models.trainings.create_training_request import (
     CreateTrainingRequest,
     CreateExerciseRequest,
 )
+from models.trainings.create_review import CreateReviewRequest
+from models.trainings.get_reviews import GetReviewsRequest
 from models.trainings.get_trainings import (
     GetTrainingsRequest,
 )
@@ -30,7 +32,7 @@ user_auth_scheme = UserJWTBearer()
 auth_scheme = JWTBearer()
 
 
-@router.post("/{version}/trainings")
+@router.post("/{version}/trainings", tags=["trainings"])
 async def create_training_plan(
     request: Request,
     request_model: CreateTrainingRequest,
@@ -47,7 +49,7 @@ async def create_training_plan(
     )
 
 
-@router.get("/{version}/trainings")
+@router.get("/{version}/trainings", tags=["trainings"])
 async def get_training_plans(
     request: Request,
     version,
@@ -64,7 +66,7 @@ async def get_training_plans(
     )
 
 
-@router.patch("/{version}/trainings/{training_id}")
+@router.patch("/{version}/trainings/{training_id}", tags=["trainings"])
 async def update_training_plan(
     request: Request,
     request_model: UpdateTrainingRequest,
@@ -82,7 +84,7 @@ async def update_training_plan(
     )
 
 
-@router.delete("/{version}/trainings/{training_id}")
+@router.delete("/{version}/trainings/{training_id}", tags=["trainings"])
 async def delete_training_plan(
     request: Request,
     version,
@@ -99,7 +101,9 @@ async def delete_training_plan(
     )
 
 
-@router.get("/{version}/trainings/{training_id}/exercises/{exercise_id}")
+@router.get(
+    "/{version}/trainings/{training_id}/exercises/{exercise_id}", tags=["trainings"]
+)
 async def get_exercise_by_id(
     request: Request,
     version,
@@ -116,7 +120,7 @@ async def get_exercise_by_id(
     )
 
 
-@router.post("/{version}/trainings/{training_id}/exercises")
+@router.post("/{version}/trainings/{training_id}/exercises", tags=["trainings"])
 async def create_exercise(
     request: Request,
     request_model: CreateExerciseRequest,
@@ -134,7 +138,9 @@ async def create_exercise(
     )
 
 
-@router.delete("/{version}/trainings/{training_id}/exercises/{exercise_id}")
+@router.delete(
+    "/{version}/trainings/{training_id}/exercises/{exercise_id}", tags=["trainings"]
+)
 async def delete_exercise(
     request: Request,
     version,
@@ -152,7 +158,9 @@ async def delete_exercise(
     )
 
 
-@router.patch("/{version}/trainings/{training_id}/exercises/{exercise_id}")
+@router.patch(
+    "/{version}/trainings/{training_id}/exercises/{exercise_id}", tags=["trainings"]
+)
 async def update_exercise(
     request: Request,
     request_model: CreateExerciseRequest,
@@ -168,4 +176,94 @@ async def update_exercise(
         dict(request.headers),
         request.method,
         {"trainer_id": uid, **request_model.dict()},
+    )
+
+
+@router.post("/{version}/trainings/{training_id}/reviews", tags=["trainings"])
+async def create_review(
+    request: Request,
+    request_model: CreateReviewRequest,
+    version,
+    training_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/reviews"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid, **request_model.dict()},
+    )
+
+
+@router.get("/{version}/trainings/{training_id}/reviews", tags=["trainings"])
+async def get_reviews(
+    request: Request,
+    version,
+    training_id,
+    request_model: GetReviewsRequest = Depends(),
+    _: dict = Depends(auth_scheme),
+):
+    params = request_model.to_query_string()
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/reviews?{params}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/trainings/{training_id}/reviews/{review_id}", tags=["trainings"])
+async def get_review_by_id(
+    request: Request, version, training_id, review_id, _: dict = Depends(auth_scheme)
+):
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/reviews/{review_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.patch(
+    "/{version}/trainings/{training_id}/reviews/{review_id}", tags=["trainings"]
+)
+async def update_review(
+    request: Request,
+    request_model: CreateReviewRequest,
+    version,
+    training_id,
+    review_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/reviews/{review_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid, **request_model.dict()},
+    )
+
+
+@router.delete(
+    "/{version}/trainings/{training_id}/reviews/{review_id}", tags=["trainings"]
+)
+async def delete_review(
+    request: Request,
+    version,
+    training_id,
+    review_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/reviews/{review_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid},
     )

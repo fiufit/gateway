@@ -29,7 +29,7 @@ admin_auth_scheme = AdminJWTBearer()
 auth_scheme = JWTBearer()
 
 
-@router.post("/{version}/users/register")
+@router.post("/{version}/users/register", tags=["users"])
 async def user_register(
     request: Request,
     request_model: RegisterRequest,
@@ -44,7 +44,7 @@ async def user_register(
     )
 
 
-@router.post("/{version}/users/finish-register")
+@router.post("/{version}/users/finish-register", tags=["users"])
 async def user_finish_register(
     request: Request,
     request_model: FinishRegisterRequest,
@@ -61,7 +61,7 @@ async def user_finish_register(
     )
 
 
-@router.post("/{version}/admin/register")
+@router.post("/{version}/admin/register", tags=["users"])
 async def admin_register(
     request: Request,
     request_model: RegisterRequest,
@@ -77,7 +77,7 @@ async def admin_register(
     )
 
 
-@router.post("/{version}/admin/login")
+@router.post("/{version}/admin/login", tags=["users"])
 async def admin_login(
     request: Request,
     request_model: RegisterRequest,
@@ -92,7 +92,7 @@ async def admin_login(
     )
 
 
-@router.patch("/{version}/users")
+@router.patch("/{version}/users", tags=["users"])
 async def update_user(
     request: Request,
     request_model: UpdateUserRequest,
@@ -109,7 +109,7 @@ async def update_user(
     )
 
 
-@router.delete("/{version}/users/{user_id}")
+@router.delete("/{version}/users/{user_id}", tags=["users"])
 async def delete_user(
     request: Request,
     version,
@@ -126,7 +126,7 @@ async def delete_user(
     )
 
 
-@router.post("/{version}/users/{user_id}/followers")
+@router.post("/{version}/users/{user_id}/followers", tags=["users"])
 async def follow_user(
     request: Request,
     version,
@@ -144,7 +144,7 @@ async def follow_user(
     )
 
 
-@router.delete("/{version}/users/{user_id}/followers")
+@router.delete("/{version}/users/{user_id}/followers", tags=["users"])
 async def unfollow_user(
     request: Request,
     version,
@@ -161,7 +161,7 @@ async def unfollow_user(
     )
 
 
-@router.get("/{version}/users/{user_id}/followers")
+@router.get("/{version}/users/{user_id}/followers", tags=["users"])
 async def get_followers(
     request: Request,
     version,
@@ -177,7 +177,7 @@ async def get_followers(
     )
 
 
-@router.get("/{version}/users/{user_id}/followed")
+@router.get("/{version}/users/{user_id}/followed", tags=["users"])
 async def get_followed(
     request: Request,
     version,
@@ -193,7 +193,7 @@ async def get_followed(
     )
 
 
-@router.get("/{version}/users/{user_id}")
+@router.get("/{version}/users/{user_id}", tags=["users"])
 async def get_user_by_uid(
     request: Request,
     version,
@@ -209,7 +209,7 @@ async def get_user_by_uid(
     )
 
 
-@router.get("/{version}/users")
+@router.get("/{version}/users", tags=["users"])
 async def get_user(
     request: Request,
     version,
