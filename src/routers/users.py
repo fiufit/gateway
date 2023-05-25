@@ -224,3 +224,35 @@ async def get_user(
         request.method,
         {},
     )
+
+
+@router.post("/{version}/users/{user_id}/enable", tags=["users"])
+async def enable_user(
+    request: Request,
+    version,
+    user_id,
+    _: dict = Depends(admin_auth_scheme),
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/enable"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.delete("/{version}/users/{user_id}/disable", tags=["users"])
+async def disable_user(
+    request: Request,
+    version,
+    user_id,
+    _: dict = Depends(admin_auth_scheme),
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/disable"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
