@@ -1,11 +1,5 @@
-from pydantic import (
-    BaseModel,
-)
-from typing import Optional
+from .create_training_request import CreateTrainingRequest
 
 
-class UpdateTrainingRequest(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    difficulty: Optional[str]
-    duration: Optional[int]
+class UpdateTrainingRequest(CreateTrainingRequest):
+    pass

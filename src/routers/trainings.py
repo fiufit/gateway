@@ -19,9 +19,7 @@ from models.trainings.get_reviews import GetReviewsRequest
 from models.trainings.get_trainings import (
     GetTrainingsRequest,
 )
-from models.trainings.update_training import (
-    UpdateTrainingRequest,
-)
+from models.trainings.update_training import UpdateTrainingRequest
 from request import (
     make_request,
 )
@@ -66,7 +64,7 @@ async def get_training_plans(
     )
 
 
-@router.patch("/{version}/trainings/{training_id}", tags=["trainings"])
+@router.put("/{version}/trainings/{training_id}", tags=["trainings"])
 async def update_training_plan(
     request: Request,
     request_model: UpdateTrainingRequest,
