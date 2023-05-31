@@ -19,9 +19,6 @@ from models.trainings.get_reviews import GetReviewsRequest
 from models.trainings.get_trainings import (
     GetTrainingsRequest,
 )
-from models.trainings.update_training import (
-    UpdateTrainingRequest,
-)
 from request import (
     make_request,
 )
@@ -66,10 +63,10 @@ async def get_training_plans(
     )
 
 
-@router.patch("/{version}/trainings/{training_id}", tags=["trainings"])
+@router.put("/{version}/trainings/{training_id}", tags=["trainings"])
 async def update_training_plan(
     request: Request,
-    request_model: UpdateTrainingRequest,
+    request_model: CreateTrainingRequest,
     version,
     training_id,
     user: dict = Depends(user_auth_scheme),
