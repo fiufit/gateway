@@ -25,5 +25,4 @@ class GetTrainingsRequest(Pagination):
                     query.append(f"{param}[]={list_value}")
             else:
                 query.append(f"{param}={value}")
-        print("&".join(query))
         return "&".join(query)
