@@ -1,6 +1,7 @@
 from pydantic import (
     BaseModel,
 )
+from typing import Optional
 
 
 class CreateExerciseRequest(BaseModel):
@@ -14,3 +15,4 @@ class CreateTrainingRequest(BaseModel):
     difficulty: str
     duration: int
     exercises: list[CreateExerciseRequest]
+    tags: Optional[list[str]]

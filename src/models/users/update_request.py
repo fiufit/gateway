@@ -12,3 +12,4 @@ class UpdateUserRequest(BaseModel):
     height: Optional[int]
     weight: Optional[int]
     main_location: Optional[str]
+    interests: Optional[list[str]]
