@@ -7,6 +7,7 @@ class GetUsersRequest(Pagination):
     nickname: Optional[str]
     location: Optional[str]
     is_verified: Optional[bool]
+    disabled: Optional[bool]
 
     def to_query_string(self):
         params = self.dict()
