@@ -2,12 +2,8 @@ from typing import Optional
 from models.pagination import Pagination
 
 
-class GetUsersRequest(Pagination):
-    name: Optional[str]
-    nickname: Optional[str]
-    location: Optional[str]
-    is_verified: Optional[bool]
-    disabled: Optional[bool]
+class GetTrainingSessionsRequest(Pagination):
+    training_id: Optional[int]
 
     def to_query_string(self):
         params = self.dict()

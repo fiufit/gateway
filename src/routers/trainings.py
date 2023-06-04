@@ -20,6 +20,9 @@ from models.trainings.get_trainings import (
     GetTrainingsRequest,
 )
 from models.trainings.update_training import UpdateTrainingRequest
+from models.trainings.create_training_session import CreateTrainingSessionRequest
+from models.trainings.get_training_sessions import GetTrainingSessionsRequest
+from models.trainings.update_training_session import UpdateTrainingSessionRequest
 from request import (
     make_request,
 )
@@ -264,4 +267,72 @@ async def delete_review(
         dict(request.headers),
         request.method,
         {"user_id": uid},
+    )
+
+
+@router.post("/{version}/training_sessions", tags=["trainings"])
+async def create_training_session(
+    request: Request,
+    version,
+    request_model: CreateTrainingSessionRequest = Depends(),
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    params = request_model.to_query_string()
+    url = f"{TRAININGS_URL}/{version}/training_sessions?{params}&user_id={uid}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/training_sessions", tags=["trainings"])
+async def get_training_sessions(
+    request: Request,
+    version,
+    request_model: GetTrainingSessionsRequest = Depends(),
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    params = request_model.to_query_string()
+    url = f"{TRAININGS_URL}/{version}/training_sessions?{params}&user_id={uid}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/training_sessions/{session_id}", tags=["trainings"])
+async def get_training_session_by_id(
+    request: Request, version, session_id, user: dict = Depends(user_auth_scheme)
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/training_sessions/{session_id}?requester_id={uid}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.put("/{version}/training_sessions/{session_id}", tags=["trainings"])
+async def update_training_session(
+    request: Request,
+    request_model: UpdateTrainingSessionRequest,
+    version,
+    session_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/training_sessions/{session_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"requester_id": uid, **request_model.dict()},
     )

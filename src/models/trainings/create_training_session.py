@@ -1,13 +1,8 @@
-from typing import Optional
-from models.pagination import Pagination
+from pydantic import BaseModel
 
 
-class GetUsersRequest(Pagination):
-    name: Optional[str]
-    nickname: Optional[str]
-    location: Optional[str]
-    is_verified: Optional[bool]
-    disabled: Optional[bool]
+class CreateTrainingSessionRequest(BaseModel):
+    training_id: int
 
     def to_query_string(self):
         params = self.dict()
