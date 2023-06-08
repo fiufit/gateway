@@ -8,6 +8,14 @@ TRAININGS_SERVICE_URL = os.getenv(
     "TRAININGS_SERVICE_URL",
     "localhost",
 )
+NOTIFICATIONS_SERVICE_URL = os.getenv(
+    "NOTIFICATIONS_SERVICE_URL",
+    "localhost",
+)
+METRICS_SERVICE_URL = os.getenv(
+    "METRICS_SERVICE_URL",
+    "localhost",
+)
 APP_HOST = os.getenv("HOST", "localhost")
 APP_PORT = int(os.getenv("PORT", "8000"))
 FIREBASE_ADMIN = os.getenv(
