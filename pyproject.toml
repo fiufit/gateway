@@ -22,8 +22,11 @@ pyjwt = "^2.6.0"
 [tool.black]
 line-length = 90
 
+[tool.flakeheaven]
+exclude = ["docs.py"]
+
 [tool.flakeheaven.plugins]
-# include everything W503: line break before binary operator
+# include everything but W503: line break before binary operator
 # because black does that :P
 pyflakes = ["+*"]
 pycodestyle = ["+*", "-W503"]
