@@ -18,6 +18,7 @@ from auth.validation import (
 from routers import (
     users,
     trainings,
+    notifications,
 )
 from errors import (
     CustomException,
@@ -34,6 +35,7 @@ app = FastAPI(openapi_tags=tags_metadata)
 
 app.include_router(users.router)
 app.include_router(trainings.router)
+app.include_router(notifications.router)
 
 app.add_exception_handler(RequestValidationError, handle_validation_error)
 app.add_exception_handler(CustomException, handle_custom_exception)

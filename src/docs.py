@@ -11,4 +11,16 @@ tags_metadata = [
         "name": "trainings",
         "description": "Microservice for managing fiufit training plans.",
     },
+    {
+        "name": "notifications",
+        "description": "Microservice for managing fiufit notifications.",
+        "externalDocs": {
+            "description": "Notifications external docs",
+            "url": "https://notifications-notifications-danielovera.cloud.okteto.net/api/v1/docs/",
+        },
+    },
+    {
+        "name": "metrics",
+        "description": "Microservice for managing fiufit metrics.",
+    }
 ]
