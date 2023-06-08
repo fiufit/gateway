@@ -22,5 +22,5 @@ tags_metadata = [
     {
         "name": "metrics",
         "description": "Microservice for managing fiufit metrics.",
-    }
+    },
 ]
