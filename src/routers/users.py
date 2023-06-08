@@ -18,6 +18,7 @@ from models.users.register_request import (
 )
 from models.users.update_request import UpdateUserRequest
 from models.users.get_users_request import GetUsersRequest, GetClosestUsersRequest
+from models.users.notify_request import NotifyLoginRequest
 from request import (
     make_request,
 )
@@ -268,6 +269,40 @@ async def disable_user(
     _: dict = Depends(admin_auth_scheme),
 ):
     url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/disable"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.post("/{version}/users/login", tags=["users"])
+async def notify_login(
+    request: Request,
+    version,
+    model: NotifyLoginRequest = Depends(),
+    _: dict = Depends(auth_scheme),
+):
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users/login?{params}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.post("/{version}/users/password-recover", tags=["users"])
+async def notify_password_recover(
+    request: Request,
+    version,
+    model: NotifyLoginRequest = Depends(),
+    _: dict = Depends(auth_scheme),
+):
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users/password-recover?{params}"
     return await make_request(
         url,
         dict(request.headers),
