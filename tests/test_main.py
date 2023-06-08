@@ -123,14 +123,17 @@ def test_successful_finish_register(mock_bearer_class, mock_make_request):
         "birth_date": "18/12/2022",
         "height": 169,
         "weight": 67,
-        "main_location": "Qatar",
+        "latitude": 23.4,
+        "longitude": -23.2,
         "interests": [
             "fubol",
             "futbol",
             "la pelota",
             "la del mundo",
         ],
+        "method": "mail",
     }
     response = client.post("/v1/users/finish-register", json=body, headers=headers)
+    print(response.text)
     assert response.status_code == 200
     assert response.json() == {"success": True}

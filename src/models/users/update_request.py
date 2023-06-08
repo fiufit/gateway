@@ -11,5 +11,6 @@ class UpdateUserRequest(BaseModel):
     birth_date: Optional[str]
     height: Optional[int]
     weight: Optional[int]
-    main_location: Optional[str]
+    latitude: Optional[int]
+    longitude: Optional[int]
     interests: Optional[list[str]]
