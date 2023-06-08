@@ -15,5 +15,7 @@ class FinishRegisterRequest(BaseModel):
     birth_date: str
     height: int
     weight: int
-    main_location: str
+    latitude: float
+    longitude: float
     interests: list[str]
+    method: str

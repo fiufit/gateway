@@ -17,7 +17,7 @@ from models.users.register_request import (
     FinishRegisterRequest,
 )
 from models.users.update_request import UpdateUserRequest
-from models.users.get_users_request import GetUsersRequest
+from models.users.get_users_request import GetUsersRequest, GetClosestUsersRequest
 from request import (
     make_request,
 )
@@ -185,6 +185,24 @@ async def get_followed(
     _: dict = Depends(auth_scheme),
 ):
     url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/followed"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/users/closest", tags=["users"])
+async def get_closest(
+    request: Request,
+    version,
+    model: GetClosestUsersRequest = Depends(),
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users/{uid}/closest?{params}"
     return await make_request(
         url,
         dict(request.headers),
