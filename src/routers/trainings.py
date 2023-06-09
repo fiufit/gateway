@@ -23,6 +23,9 @@ from models.trainings.update_training import UpdateTrainingRequest
 from models.trainings.create_training_session import CreateTrainingSessionRequest
 from models.trainings.get_training_sessions import GetTrainingSessionsRequest
 from models.trainings.update_training_session import UpdateTrainingSessionRequest
+from models.trainings.create_goal import CreateGoalRequest
+from models.trainings.update_goals import UpdateGoalRequest
+from models.trainings.get_goals import GetGoalsRequest
 from request import (
     make_request,
 )
@@ -335,4 +338,84 @@ async def update_training_session(
         dict(request.headers),
         request.method,
         {"requester_id": uid, **request_model.dict()},
+    )
+
+
+@router.post("/{version}/goals", tags=["trainings"])
+async def create_goal(
+    request: Request,
+    request_model: CreateGoalRequest,
+    version,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/goals?"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid, **request_model.dict()},
+    )
+
+
+@router.get("/{version}/goals", tags=["trainings"])
+async def get_goals(
+    request: Request,
+    version,
+    model: GetGoalsRequest = Depends(),
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    params = model.to_query_string()
+    url = f"{TRAININGS_URL}/{version}/goals?{params}&user_id={uid}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.get("/{version}/goals/{goal_id}", tags=["trainings"])
+async def get_goal_by_id(
+    request: Request, version, goal_id, _: dict = Depends(user_auth_scheme)
+):
+    url = f"{TRAININGS_URL}/{version}/goals/{goal_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.patch("/{version}/goals/{goal_id}", tags=["trainings"])
+async def update_goal(
+    request: Request,
+    request_model: UpdateGoalRequest,
+    version,
+    goal_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/goals/{goal_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid, **request_model.dict()},
+    )
+
+
+@router.delete("/{version}/goals/{goal_id}", tags=["trainings"])
+async def delete_goal(
+    request: Request, version, goal_id, user: dict = Depends(user_auth_scheme)
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/goals/{goal_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid},
     )
