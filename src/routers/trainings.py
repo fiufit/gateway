@@ -26,6 +26,7 @@ from models.trainings.update_training_session import UpdateTrainingSessionReques
 from models.trainings.create_goal import CreateGoalRequest
 from models.trainings.update_goals import UpdateGoalRequest
 from models.trainings.get_goals import GetGoalsRequest
+from models.pagination import Pagination
 from request import (
     make_request,
 )
@@ -413,6 +414,58 @@ async def delete_goal(
 ):
     uid = user["uid"]
     url = f"{TRAININGS_URL}/{version}/goals/{goal_id}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid},
+    )
+
+
+@router.get("/{version}/trainings/favorites", tags=["trainings"])
+async def get_favorite_trainings(
+    request: Request,
+    version,
+    model: Pagination = Depends(),
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    params = model.to_query_string()
+    url = f"{TRAININGS_URL}/{version}/trainings/favorites?{params}&user_id={uid}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.post("/{version}/trainings/{training_id}/favorites", tags=["trainings"])
+async def add_favorite_training(
+    request: Request,
+    version,
+    training_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/favorites"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid},
+    )
+
+
+@router.delete("/{version}/trainings/{training_id}/favorites", tags=["trainings"])
+async def remove_favorite_training(
+    request: Request,
+    version,
+    training_id,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/favorites"
     return await make_request(
         url,
         dict(request.headers),
