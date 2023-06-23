@@ -19,6 +19,8 @@ from models.users.register_request import (
 from models.users.update_request import UpdateUserRequest
 from models.users.get_users_request import GetUsersRequest, GetClosestUsersRequest
 from models.users.notify_request import NotifyLoginRequest
+from models.users.send_verification_request import SendVerificationPinRequest
+from models.users.verify_pin_request import VerifyPinRequest
 from request import (
     make_request,
 )
@@ -308,4 +310,36 @@ async def notify_password_recover(
         dict(request.headers),
         request.method,
         {},
+    )
+
+
+@router.post("/{version}/users/{user_id}/verification/send", tags=["users"])
+async def send_verification_pin(
+    request: Request,
+    request_model: SendVerificationPinRequest,
+    version,
+    user_id,
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/verification/send"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {**request_model.dict()},
+    )
+
+
+@router.post("/{version}/users/{user_id}/verification/verify", tags=["users"])
+async def verify_pin(
+    request: Request,
+    request_model: VerifyPinRequest,
+    version,
+    user_id,
+):
+    url = f"{USERS_SERVICE_URL}/{version}/users/{user_id}/verification/verify"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {**request_model.dict()},
     )
