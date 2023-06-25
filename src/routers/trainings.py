@@ -9,6 +9,7 @@ from config import (
 from auth.user_jwt_bearer import (
     UserJWTBearer,
 )
+from auth.admin_jwt_bearer import AdminJWTBearer
 from auth.jwt_bearer import JWTBearer
 from models.trainings.create_training_request import (
     CreateTrainingRequest,
@@ -34,6 +35,7 @@ from request import (
 
 router = APIRouter()
 user_auth_scheme = UserJWTBearer()
+admin_auth_scheme = AdminJWTBearer()
 auth_scheme = JWTBearer()
 
 
@@ -471,4 +473,36 @@ async def remove_favorite_training(
         dict(request.headers),
         request.method,
         {"user_id": uid},
+    )
+
+
+@router.post("/{version}/trainings/{training_id}/enable", tags=["trainings"])
+async def enable_training_plan(
+    request: Request,
+    version,
+    training_id,
+    _: dict = Depends(admin_auth_scheme),
+):
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/enable"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
+@router.delete("/{version}/trainings/{training_id}/disable", tags=["trainings"])
+async def disable_training_plan(
+    request: Request,
+    version,
+    training_id,
+    _: dict = Depends(admin_auth_scheme),
+):
+    url = f"{TRAININGS_URL}/{version}/trainings/{training_id}/disable"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
     )
