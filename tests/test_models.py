@@ -104,9 +104,10 @@ def test_get_users_request_to_query_string():
         nickname="nickname",
         is_verified=True,
         disabled=False,
+        user_ids=["user_id1", "user_id2"],
     )
     query_string = get_users_request.to_query_string()
-    assert query_string == "name=name&nickname=nickname&is_verified=True&disabled=False"
+    assert query_string == "name=name&nickname=nickname&is_verified=True&disabled=False&user_ids[]=user_id1&user_ids[]=user_id2"
 
 
 def test_get_closest_users_request_to_query_string():
