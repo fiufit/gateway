@@ -13,6 +13,7 @@ class GetTrainingsRequest(Pagination):
     tags: Optional[List[str]] = Field(Query([]))
     min_duration: Optional[int]
     max_duration: Optional[int]
+    disabled: Optional[bool]
 
     def to_query_string(self):
         params = self.dict()
