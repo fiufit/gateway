@@ -9,7 +9,7 @@ class GetUsersRequest(Pagination):
     nickname: Optional[str]
     is_verified: Optional[bool]
     disabled: Optional[bool]
-    tags: Optional[List[str]] = Field(Query([]))
+    user_ids: Optional[List[str]] = Field(Query([]))
 
     def to_query_string(self):
         params = self.dict()
