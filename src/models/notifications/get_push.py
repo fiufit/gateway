@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class GetNotificationsRequest(BaseModel):
-    read: bool
+    read: Optional[bool]
     limit: Optional[int]
     next_cursor: Optional[str]
 
