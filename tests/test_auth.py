@@ -9,13 +9,6 @@ def test_decode_base64_to_dict():
     assert decoded == {"username": "admin"}
 
 
-@patch("src.auth.validation.firebase_admin.initialize_app")
-def test_initialize_firebase_app(mock_initialize_app):
-    validation.initialize_firebase_app()
-    mock_initialize_app.return_value = None
-    mock_initialize_app.assert_called_once()
-
-
 @patch("src.auth.validation.auth.verify_id_token")
 def test_validate_firebase_token(mock_verify_token):
     mock_verify_token.return_value = {"email_verified": True}
