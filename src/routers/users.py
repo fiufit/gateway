@@ -21,6 +21,8 @@ from models.users.get_users_request import GetUsersRequest, GetClosestUsersReque
 from models.users.notify_request import NotifyLoginRequest
 from models.users.send_verification_request import SendVerificationPinRequest
 from models.users.verify_pin_request import VerifyPinRequest
+from models.users.get_certifications_request import GetCertificationsRequest
+from models.users.update_certification_request import UpdateCertificationRequest
 from request import (
     make_request,
 )
@@ -214,6 +216,24 @@ async def get_closest(
     )
 
 
+@router.get("/{version}/users/certifications", tags=["users"])
+async def get_certifications(
+    request: Request,
+    version,
+    model: GetCertificationsRequest = Depends(),
+    _: dict = Depends(auth_scheme),
+):
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users/certifications?{params}"
+    print(url)
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
+    )
+
+
 @router.get("/{version}/users/{user_id}", tags=["users"])
 async def get_user_by_uid(
     request: Request,
@@ -342,4 +362,38 @@ async def verify_pin(
         dict(request.headers),
         request.method,
         {**request_model.dict()},
+    )
+
+
+@router.post("/{version}/users/certifications", tags=["users"])
+async def create_certification(
+    request: Request,
+    version,
+    user: dict = Depends(user_auth_scheme),
+):
+    uid = user["uid"]
+    url = f"{USERS_SERVICE_URL}/{version}/users/certifications"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {"user_id": uid},
+    )
+
+
+@router.put("/{version}/users/certifications/{id}", tags=["users"])
+async def update_certification(
+    request: Request,
+    version,
+    id,
+    model: UpdateCertificationRequest = Depends(),
+    _: dict = Depends(admin_auth_scheme),
+):
+    params = model.to_query_string()
+    url = f"{USERS_SERVICE_URL}/{version}/users/certifications/{id}?{params}"
+    return await make_request(
+        url,
+        dict(request.headers),
+        request.method,
+        {},
     )
