@@ -8,6 +8,8 @@ from src.models.trainings.get_reviews import GetReviewsRequest
 from src.models.users.get_users_request import GetUsersRequest
 from src.models.users.get_users_request import GetClosestUsersRequest
 from src.models.users.notify_request import NotifyLoginRequest
+from src.models.users.get_certifications_request import GetCertificationsRequest
+from src.models.users.update_certification_request import UpdateCertificationRequest
 
 
 def test_get_metrics_request_to_query_string():
@@ -135,3 +137,20 @@ def test_notify_login_method_to_query_string():
     )
     query_string = notify_login_request.to_query_string()
     assert query_string == "method=method"
+
+
+def test_get_certifications_request_to_query_string():
+    get_certifications_request = GetCertificationsRequest(
+        user_id="user_id",
+        status="status",
+    )
+    query_string = get_certifications_request.to_query_string()
+    assert query_string == "user_id=user_id&status=status"
+
+
+def test_update_certification_request_to_query_string():
+    update_certification_request = UpdateCertificationRequest(
+        status="status",
+    )
+    query_string = update_certification_request.to_query_string()
+    assert query_string == "status=status"
