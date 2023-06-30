@@ -1,0 +1,10 @@
+#RENAME THIS TO .env AND REMOVE THIS COMMENT AFTER CHANGING THE VALUES FOR YOUR ENVIRONMENT
+
+USERS_SERVICE_URL=users-service-url.com
+TRAININGS_SERVICE_URL=trainings-service-url.com
+METRICS_SERVICE_URL=metrics-service-url.com
+NOTIFICATIONS_SERVICE_URL=notifications-service-url.com
+FIREBASE_ADMIN=b64encodedFirebaseJsonSDKCredentials
+USERS_JWT_PUBLIC_KEY=b64encodedPublicRSAKey
+PORT=8000
+HOST=0.0.0.0

@@ -1,29 +1,86 @@
-# gateway
+# FiuFit: Gateway
 
-[![Tests](https://github.com/fiufit/gateway/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-app.yml)
+[![Fly Deploy](https://github.com/fiufit/gateway/actions/workflows/fly.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/fly.yml)
+
 [![Black format](https://github.com/fiufit/gateway/actions/workflows/python-black.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-black.yml)
 [![Flakeheaven Linter](https://github.com/fiufit/gateway/actions/workflows/python-flake.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-flake.yml)
 
 [![codecov](https://codecov.io/gh/fiufit/gateway/branch/main/graph/badge.svg?token=NRRA48UTP5)](https://codecov.io/gh/fiufit/gateway)
+[![Tests](https://github.com/fiufit/gateway/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/fiufit/gateway/actions/workflows/python-app.yml)
 
 API gateway or BFF for FiuFit's microservice structure
 
-## Usage
-Having poetry installed, run:
+## Installing the project
 
-`poetry install`
+This project was build with [poetry](https://python-poetry.org/docs/) to manage dependencies.
 
-To activate the virtual environment:
+Having poetry installed, run this command to install the dependencies:
 
-`poetry shell`
+```
+poetry install
+```
 
-Finally you can run the app using:
+## Dev
 
-`python src/main.py`
+To add new dependencies, you can run:
+
+```
+poetry add <dependency>
+```
+
+**NOTE**: Don't forget to commit all changes to `poetry.lock` and `pyproject.toml`! 
+
+To activate the virtual environment run:
+
+```
+poetry shell
+```
+
+Then, you can run the app using:
+
+```
+python src/main.py
+```
+
+To run the formatter:
+
+```
+black [Options] path
+```
+
+To run the linter:
+
+```
+flakeheaven lint path
+```
 
 To run the tests:
 
-`pytest`
+```
+pytest
+```
+
+If you want to check code coverage locally:
+
+```
+pytest --cov -v
+```
+
+Finally, you can exit the virtual environment:
+
+```
+exit
+```
+
+## Running locally
+
+In addition to running it directly within poetry's virtual environment you can run the project with Docker:
+
+* Create a `.env` file with the same environment variables as in `.example-env`
+
+* Run `docker build -t fiufit-gateway .`
+
+* Run `docker run -p PORT:PORT --env-file=.env fiufit-gateway`
 
 ## Links
 
